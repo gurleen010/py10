@@ -1,0 +1,165 @@
+
+Q.1- Create a database. Create the following tables:
+
+Book
+
+Titles
+
+Publishers
+
+Zipcodes
+
+AuthorsTitles
+
+Authors
+
+Refer to the diagram below
+
+
+import mysql.connector as pm
+try:
+    
+con=pm.connect(host='localhost',database='acadviewdb',user='root',password='root')
+    cursor=con.cursor()
+    query6='Create table Authors(AuthorID int primary key,FirstName 
+varchar(15),MiddleName varchar(15),LastName varchar(15))'
+    cursor.execute(query6)
+    query4='Create table Zip_Codes(Zip_Code_ID int primary key,City 
+varchar(15),State varchar(20),Zip_Code int)'
+    cursor.execute(query4)
+    query3='Create table Publishers(Publisher_ID int primary key,Name 
+varchar(15),Street_Address varchar(50),\
+    Suite_Number int,Zip_Code_ID int,foreign key(Zip_Code_ID) references 
+Zip_Codes(Zip_Code_ID))'    
+    cursor.execute(query3)
+    query2='Create table Titles(TitleId int primary key,Title 
+varchar(35),ISBN int,Publisher_ID int,Publication_Year int,\
+    foreign key(Publisher_ID) references Publishers(Publisher_ID))'
+    cursor.execute(query2)
+    query1='Create table Books(BookId int primary key,TitleId 
+int,Location varchar(15),Genre varchar(10),\
+    foreign key(TitleId) references Titles(TitleId))'
+    cursor.execute(query1)
+    query5='Create table Authors_Titles(Author_Title_ID int primary 
+key,AuthorID int ,TitleId int,\
+    foreign key(AuthorID) references Authors(AuthorID),foreign 
+key(TitleId) references Titles(TitleId))'
+    cursor.execute(query5)
+    print('Table Created')
+    
+except pm.DatabaseError as e:
+    if con:
+        con.rollback()
+        print('Problem occured: ', e)
+    
+finally:
+    if cursor:
+        cursor.close()
+    if con:
+        con.close()
+    print('DONE!!')
+
+Table Created
+DONE!!
+
+Q.2- Insert values in the tables.
+
+import mysql.connector as pm
+try:
+    
+con=pm.connect(host='localhost',database='acadviewdb',user='root',password='root')
+    cursor=con.cursor()
+    query1 = "insert into Authors values 
+(10,'','D','F'),(12,'N','W','P'),\
+    
+(13,'Y','St','Br'),(14,'Rn','Prp','Ski'),(15,'Ral','Nam','Gup')"
+    cursor.execute(query1)
+    
+    query2 = "insert into Zip_Codes values 
+(1,'UttarPradesh','Lucknow',249014),(2,'Dehradun','Uttarakhand',248001),\
+    
+(3,'Maharashtra','Mumbai',34987),(4,'UttarPradesh','Lucknow',249014),(5,'Rajasthan','Jaipur',123456)"
+    cursor.execute(query2)
+    
+    query3 = "insert into Publishers values(101,'VK ','Old 
+',51,2),(011,'Praf','Vihar',53,4),\
+    (102,'All','ViNagar',55,3),(13,'Ral Gup','Ra
+Vihar',54,1),(14,'Mti Vea','Sheel Bagh',57,5)"
+    cursor.execute(query3)
+   
+    query4 = "insert into Titles values 
+(21,'ASongOfIce',1001,12,2005),(22,'GobletOfFire',1002,11,2003),\
+    
+(23,'TheLoadRunner',1003,10,2014),(24,'FivePointThreeTw',1004,14,2012),(25,'NeedNoReasons',1005,13,2015)"
+    cursor.execute(query4)
+    
+    query5 = "insert into Books values 
+(201,21,'Hyderabad','Thriller'),(202,23,'Bangalore','Classic'),\
+    
+(203,22,'NewDelhi','Romantic'),(204,25,'Kolkata','HateStory'),(205,24,'Chandigarh','Comedy')"
+    cursor.execute(query5)
+
+    query6 = "insert into Authors_Titles values 
+(501,102,21),(502,101,22),(504,103,24),(505,105,23),(503,104,25)"
+    cursor.execute(query6)
+    
+    con.commit()
+
+    
+except pm.DatabaseError as e:
+    if con:
+        con.rollback()
+        print('Problem occured: ', e)
+    
+finally:
+    if cursor:
+        cursor.close()
+    if con:
+        con.close()
+    print('DONE!!')
+
+
+
+Q.3- Update any values in any of the tables. Print the original and 
+updated values.
+
+import mysql.connector as pm
+try:
+    
+con=pm.connect(host='localhost',database='acadviewdb',user='root',password='root')
+    cursor=con.cursor()
+    query1="Select * from Publishers where Publisher_ID=13"
+    cursor.execute(query1)
+    data = cursor.fetchall()
+    for row in data:
+        print('Publisher_ID: {}, Name: {}, Street_Adress: {}, 
+Suite_Number: {}, Zip_Code_ID: {}'\
+             .format(row[0], row[1], row[2], row[3],row[4]))
+   
+    query2="Update Publishers set Street_Address='Ramvilas Enclave' 
+where Publisher_ID=14"
+    cursor.execute(query2)
+    con.commit()
+    
+    print("\nUpdated Table:")
+    query3="Select * from Publishers"
+    cursor.execute(query3)
+    d = cursor.fetchall()
+    for row in d:
+        print('Publisher_ID: {}, Name: {}, Street_Adress: {}, 
+Suite_Number: {}, Zip_Code_ID: {}'\
+             .format(row[0], row[1], row[2], row[3],row[4]))
+   
+except pm.DatabaseError as e:
+    if con:
+        con.rollback()
+        print('Problem occured: ', e)
+    
+finally:
+    if cursor:
+        cursor.close()
+    if con:
+        con.close()
+    print('\nDONE!!')
+
+
